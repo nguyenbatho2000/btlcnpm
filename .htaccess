@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteRule "nhaccuviet.html" "home.php"
+RewriteRule "nhac-cu-viet/dangnhap.html" "login.php"
+RewriteRule "^san-pham/([a-zA-Z0-9]+)/([0-9]+).html$" "sanpham.php?sp=$1&page=$2"
+RewriteRule "^thong-tin-san-pham/([0-9]+).html$" "thongtinsp.php?idsp=$1"

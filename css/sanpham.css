@@ -1,0 +1,87 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+#header{height: 65px;background-color: #000;top: 0px;}
+.logo-box{top:5px;}
+.list-box{top:15px}
+.giohang-box{top:15px}
+.search-box{top:15px}
+footer{margin-top: 0px;}
+p{color:#ffc312}
+p:hover{color:#ffc312;text-decoration: underline;}
+.title{
+	position: relative;
+	top: -50px;
+	left: 0px;
+	background-color: #fff;
+	width: 180px; 
+	text-align: center;
+	animation: moveInLeft 1s ease-out;
+}
+.title img{
+	margin-top: -15px;
+	float: left;
+	margin-left: 10px;
+	animation: moveInLeft 1s ease-out;
+}
+.title h3{
+	 margin-left: -10px;
+	 font-weight: bold;
+	 color: #000000cc;
+	 animation: moveInLeft 0.8s ease-out;
+}
+.sapxeptheo{
+	position: absolute;
+	right: 90px;
+	margin-top: -80px;
+	z-index: 200;
+	animation: moveInLeft 1s ease-out;
+}
+.sapxeptheo button{
+	padding: 5px;
+	font-size: 13px; 
+	font-family: Roboto;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: #fff;
+	border: 0px;
+	width: 150px;
+	
+}
+.phantrang ul li{
+	float: left;
+	margin-right: 5px;
+}
+.phantrang ul li a{
+	border: 1px solid gray;
+	padding: 3px;
+	padding-left: 7px;
+	padding-right: 7px;
+}
+.sapxeptheo ul a{
+	width: 100%; 
+	font-family: Lato;
+}
+.sapxeptheo ul a li{
+	width: 100%;
+	border-top: 1px solid gray;
+	border-left: 1px solid gray;
+	border-right: 1px solid gray;
+	padding-left: 10px;
+	padding: 5px;
+	background-color: #fff;
+	font-size: 14px;
+	font-family: Lato;
+	transition: 0.5s;
+}
+.sapxeptheo ul a li:hover
+{
+	background-color: #fee437;
+}
+
+
+
+
+
