@@ -40,7 +40,11 @@
   }
   function removehang(idhd)
   {
-    $.post('backend/removehang.php',{'idhd':idhd},function(data){location.reload();});
+    var option = confirm("Bạn có muốn xóa không ?");
+    if( option == true)
+    {
+      $.post('backend/removehang.php',{'idhd':idhd},function(data){location.reload();});
+    }
   }
   function timkiemsp(search)
   {
@@ -113,24 +117,13 @@
         		<li class="nav-item"><a href="Home.php" class="list nav-link" >Trang Chủ</a></li>
         		<li class="nav-item"><a href="" class="list nav-link">Tin Tức</a></li>
         		<li class="nav-item"><a href="" class="list nav-link">Liên Hệ</a></li>
-        		<li class="nav-item"><a href="<?php if($id != ""){echo "thongtinkhachhang.php";}else{echo "login.php";} ?>" class="list nav-link"><?php if($id != ""){echo $data1['fullname'];}else{echo "Login";} ?></a></li>
+        		<li class="nav-item"><a href="<?php if($id != ""){echo "thongtinkhachhang.php";}else{echo "login.php";} ?>" class="list nav-link"><?php if($id != ""){echo $data1['fullname'];}else{echo "Đăng Nhập";} ?></a></li>
             <?php 
             if($id != "")
             {
             ?>
-              <li class="nav-item"><form method="post"><button style="background-color: #00000000;border: 0px;" type="submit" name="logout" class="list nav-link">Logout</button></form></li>
+              <li class="nav-item"><form method="post"><button style="background-color: #00000000;border: 0px;" type="submit" name="logout" class="list nav-link">Đăng Xuất</button></form></li>
               <?php
-                $checkname = $data1['username'];
-                $selectt = "SELECT position from systemmanagement where userid = '$checkname'";
-                $checkad = select_one($selectt);
-                if($checkad != "")
-                {
-                  ?>
-                  <li class="nav-item"><a href="" class="list nav-link">Quản Lý</a></li>
-                  <?php
-                }
-              ?> 
-            <?php
             }
             ?>
       	</ul>
@@ -191,6 +184,6 @@
       
  	</div>
 </div>
-<div id="khachhang_dathang" class="dathang" style="width: 100%; height: 100%;background-color: #00000054;z-index: 10000;position: fixed; display: none; animation: zoomout 0.5s ease-out;">
+<div id="khachhang_dathang" class="dathang" style="width: 100%; height: 100%;background-color: #00000054;z-index: 10000;position: fixed; display: none;">
 
 </div>

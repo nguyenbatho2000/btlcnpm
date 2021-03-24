@@ -11,22 +11,23 @@
 		{
 			$checkusenamepass = "select * from customer_information where username = '$username' and password = '$password'";
 			$data = select_one($checkusenamepass);
-			if($data != "")
+			$sqlcheckad = "select * from staff where username_sa = '$username' and password_sa = '$password'";
+            $datacheckad = select_one($sqlcheckad);
+           
+			if($data != "" && $datacheckad == "")
 			{
-				if ($data['id'] == 1)
-					{
-						setcookie("username","$username",time()+3600);
-						setcookie("password","$password",time()+3600);
-						$_SESSION['idkh']=$data['id'];
-						header("location:Home.php");	
-					}
-					else
-					{
-						setcookie("username","$username",time()+3600);
-						setcookie("password","$password",time()+3600);				
-						$_SESSION['idkh'] = $data['id'];
-						header("location:Home.php");						
-					}
+				setcookie("username","$username",time()+3600);
+				setcookie("password","$password",time()+3600);
+				$_SESSION['idkh']=$data['id'];
+				header("location:Home.php");
+			}
+			else if($datacheckad != "" && $data == "")
+			{
+        		setcookie("username","$username",time()+3600);
+				setcookie("password","$password",time()+3600);
+        		$id = $datacheckad['id_sa'];            
+            	$_SESSION['idnv']=$id;
+            	header("location:admin.php");
 			}
 			else
 			{

@@ -1,6 +1,8 @@
 <?php
 	include('lib_db.php');
+	include('util.php');
 	session_start();
+	$erro = "";
     $id = isset($_SESSION['idkh']) ? $_SESSION['idkh']:"";
     if(isset($_POST["logout"]))
     {
@@ -25,6 +27,78 @@
     else
     {
     	header("location:Home.php");
+    }
+    if(isset($_POST['change_infor_cus']))
+    {
+    	$cus_fullname = $_REQUEST['cus_fullname'];
+    	$cus_sex = $_REQUEST['cus_sex'];
+    	$cus_date = $_REQUEST['cus_date'];
+    	$cus_address = $_REQUEST['cus_address'];
+    	$cus_numberphone = $_REQUEST['cus_numberphone'];
+    	$cus_email = $_REQUEST['cus_email'];
+    	if( $cus_fullname != "" && $cus_sex != "" && $cus_date != "" && $cus_address != "" && $cus_numberphone != "" && $cus_email != "")
+    	{
+ 
+    		$dk = 'id = '.$id;
+    		$data_table_cus = "customer_information";
+    		$data_change['fullname'] = $cus_fullname;
+    		$data_change['sex'] = $cus_sex;
+    		$data_change['date'] = $cus_date;
+    		$data_change['address'] = $cus_address;
+    		$data_change['numberphone'] = $cus_numberphone;
+    		$data_change['email'] = $cus_email;
+    		$sqlchange_cus = data_to_sql_update($data_table_cus,$data_change,$dk);
+    		$checkok = exec_update($sqlchange_cus);
+    		if($checkok == "1")
+    		{
+    			$erro = "Thay đổi thành công";
+    		}
+    		else
+    		{
+    			$erro = "Thay đổi thất bại hệ thống gặp trục chặc";
+    		}
+    	}
+    	else
+    	{
+    		$erro = "Bạn chưa hoàn thành đầy đủ thông tin";
+    	}
+    }
+    if(isset($_POST['change_pass_btn']))
+    {
+    	$passwordold = md5($_REQUEST['passwordold']);
+		$passwordnew = md5($_REQUEST['passwordnew']);
+		$repasswordnew = md5($_REQUEST['repasswordnew']);
+		if($passwordold != "" && $passwordnew != "" && $repasswordnew != "")
+		{
+			if($passwordold == $data1['password'])
+			{
+				if($passwordnew == $repasswordnew)
+				{
+					$updatepass = "update customer_information set password = '$passwordnew' where id = $id";
+					exec_update($updatepass);
+					$erro = "Thay đổi thành công";
+				}
+				else
+				{
+					$erro = "Mật khẩu nhập lại không chính xác";
+				}
+			}
+			else
+			{
+				$erro = "Mật khẩu không chính xác";
+			}
+		}
+		else
+		{
+			$erro = " Chưa nhập đủ thông tin";
+		}
+    }
+    if(isset($_POST['change_img_cus']))
+    {
+    	$change = upload_file_by_name("ttkh_change_img");
+    	$sqlupdateimg = "update customer_information set avatar = '$change' where id = $id";
+    	exec_update($sqlupdateimg);
+    	header('thongtinkhachhang.php');
     }
 ?>
 
@@ -99,7 +173,6 @@
 		  content: '';
 		  position: absolute;
 		  top: 0;
-		  
 		  width: 100%;
 		  height: 100%;
 		  background: rgba(255, 255, 255, 0.1)
@@ -296,63 +369,108 @@
 		  	document.getElementById(cityName).style.display = "block";  
 		  	
 		}
+		function hienanh(id)
+		{
+			var file = document.getElementById("ttkh_change_img").files[0];
+			if (file)
+			{
+				var reader = new FileReader();
+				reader.addEventListener("load",function(){
+					document.getElementById("image_cus").setAttribute("src",this.result);
+
+				});
+				reader.readAsDataURL(file);
+				
+		
+			}
+			
+
+		};
 	</script>
+	<?php
+		if ($erro !="") 
+		{
+			?>
+			<script type="text/javascript">
+				alert("<?php echo $erro; ?>");
+			</script>
+			<?php
+		}
+	?>
 	<?php require_once('header.php') ?>
 	<div id="ttkh_change_infor" class="backchange" style="">
 		<div class="ttkh_change_infor" >
-			<div class="close" style="position: absolute;z-index: 100;right: 4%;top: 3%;">
-				<i onclick="change()" class="fas fa-times"></i>
-			</div>
-			<div class="ttkh_namekh" style="margin-top: 50px;width: 50%;float: left;">
-				<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Họ Tên :</p>
-				<input class="form-control" type="text" name=""><span style="margin-left: 3px; color: red">*</span>
-			</div>
-			<div class="ttkh_namekh" style="margin-top: 50px;width: 100%;">
-				<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;font-family: Lato">Giới Tính :</p>
-				<select class="form-control" >
-					<option value="Nam">Nam</option>
-					<option value="Nữ">Nữ</option>
-				</select>
-			</div>
-			<div class="ttkh_namekh" style="margin-top: 20px;width: 100%; float: left;">
-				<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Ngày sinh :</p>
-				<input style="float: left;width: 25%;" class="form-control" type="datetime-local" name="">
-				<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Địa Chỉ :</p>
-				<input style="width: 40%;"  class="form-control" type="text" name=""><span style="margin-left: 3px; color: red">*</span>
-			</div>
-			<div class="ttkh_namekh" style="margin-top: 130px;width: 100%;">
-				<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">SĐT :</p>
-				<input class="form-control" type="text" name=""><span style="margin-left: 3px; color: red">*</span>
-			</div>
-			<div class="ttkh_namekh" style="margin-top: 50px;width: 100%;">
-				<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Email :</p>
-				<input class="form-control" type="text" name=""><span style="margin-left: 3px; color: red">*</span>
-			</div>
-			<div class="ttkh_namekh" style="margin-top: 30px;width: 100%;">
-				<button style="border-radius: 5px; color: #fff;background-color: #fdae37;font-size: 13px;margin-left: 50px;" class="btn btn-white">Lưu</button>
-			</div>
+			<form method="post">
+				<div class="close" style="position: absolute;z-index: 100;right: 4%;top: 3%;">
+					<i onclick="change()" class="fas fa-times"></i>
+				</div>
+				<div class="ttkh_namekh" style="width: 50%;float: left;">
+					<p style="color: #777777;float: left;margin-right: 27px;margin-top: 7px;margin-left: 20px;font-family: Lato">Họ Tên :</p>
+					<input value="<?php echo $data1['fullname'] ?>" class="form-control" type="text" name="cus_fullname"><span style="margin-left: 3px; color: red">*</span>
+				</div>
+				<div class="ttkh_namekh" style="margin-top: 50px;width: 100%;">
+					<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;font-family: Lato">Giới Tính :</p>
+					<select class="form-control"  style="width: 210px;" name="cus_sex">
+						<?php
+						if($data1['sex']=="Nam")
+						{
+							?>
+							<option value="Nam">Nam</option>
+							<option value="Nữ">Nữ</option>
+							<?php
+						}
+						else
+						{
+							?>
+							<option value="Nữ">Nữ</option>
+							<option value="Nam">Nam</option>
+							<?php
+						}
+						?>
+					</select>
+				</div>
+				<div class="ttkh_namekh" style="margin-top: 20px;width: 100%; float: left;">
+					<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Ngày sinh :</p>
+					<input style="float: left;width: 25%;" class="form-control" type="datetime-local" name="cus_date" value="<?php echo $data1['date'] ?>">
+					<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Địa Chỉ :</p>
+					<input style="width: 40%;"  class="form-control" type="text" name="cus_address" value="<?php echo $data1['address'] ?>"><span style="margin-left: 3px; color: red" >*</span>
+				</div>
+				<div class="ttkh_namekh" style="margin-top: 130px;width: 100%;">
+					<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">SĐT :</p>
+					<input style="width: 565px;" class="form-control" type="text" name="cus_numberphone" value="<?php echo $data1['numberphone'] ?>"><span style="margin-left: 3px; color: red">*</span>
+				</div>
+				<div class="ttkh_namekh" style="margin-top: 50px;width: 100%;">
+					<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Email :</p>
+					<input style="width: 555px;" class="form-control" type="text" name="cus_email" value="<?php echo $data1['email'] ?>"><span style="margin-left: 3px; color: red">*</span>
+				</div>
+				<div class="ttkh_namekh" style="margin-top: 30px;width: 100%;">
+					<button type="submit" name="change_infor_cus" style="border-radius: 5px; color: #fff;background-color: #fdae37;font-size: 13px;margin-left: 50px;" class="btn btn-white">Lưu</button>
+				</div>
+			</form>
 		</div>
 	</div>
 	<div id="ttkh_change_pass" class="backchange" style="">
 		<div class="ttkh_change_pass" >
-			<div class="close" style="position: absolute;z-index: 100;right: 4%;top: 3%;">
-				<i onclick="changepass()" class="fas fa-times"></i>
-			</div>
-			<div class="ttkh_namekh" style="margin-top: 30px;width:100%;">
-				<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Mật Khẩu Cũ :</p>
-				<input style="width: 50%;margin-left: 8px;" class="form-control" type="text" name="">
-			</div>
-			<div class="ttkh_namekh" style="margin-top: 80px;width:100%;">
-				<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Mật Khẩu Mới :</p>
-				<input style="width: 50%;" class="form-control" type="text" name="">
-			</div>
-			<div class="ttkh_namekh" style="margin-top:130px;width:100%;">
-				<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Nhập lại mk Mới :</p>
-				<input style="width: 50%;" class="form-control" type="text" name="">
-			</div>
-			<div class="ttkh_namekh" style="margin-top:180px;width:100%;">
-				<button style="border-radius: 5px; color: #fff;background-color: #fdae37;font-size: 11px;margin-left: 20px;" class="btn btn-white">Thay đổi</button>
-			</div>
+			<form method="post">
+				<div class="close" style="position: absolute;z-index: 100;right: 4%;top: 3%;">
+					<i onclick="changepass()" class="fas fa-times"></i>
+				</div>
+				<div class="ttkh_namekh" style="width: 100%;margin-top: 20px;height: 50px;">
+					<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Mật Khẩu Cũ :</p>
+					<input style="width: 50%;margin-left: 20px;" class="form-control" type="password" name="passwordold">
+				</div>
+				<div class="ttkh_namekh" style="width: 100%;height: 50px;">
+					<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Mật Khẩu Mới :</p>
+					<input style="width: 50%;margin-left: 13px;" class="form-control" type="text" name="passwordnew">
+				</div>
+				<div class="ttkh_namekh" style="width: 100%;height: 50px;">
+					<p style="color: #777777;float: left;margin-right: 10px;margin-top: 7px;margin-left: 20px;font-family: Lato">Nhập lại mk Mới :</p>
+					<input style="width: 50%;" class="form-control" type="password" name="repasswordnew">
+				</div>
+				<div class="ttkh_namekh" style="width: 100%;">
+					<button name="change_pass_btn" type="submit" style="border-radius: 5px; color: #fff;background-color: #fdae37;font-size: 11px;margin-left: 20px;" class="btn btn-white">Thay đổi</button>
+				</div>
+			</form>
 		</div>
 	</div>
 	<div class="container-fluid" style="height: 100px;"></div>
@@ -361,27 +479,32 @@
 		<div class="row" style="padding-top: 10px;padding-bottom: 10px;animation: moveInLeft 1s ease-out;">
 			<div class="col-5" style="">
 				<div class="ttkh_img" style="width: 70%;height: 450px;margin: auto;">
-					<div class="tpk_card">
-					  	<div class="front"><img src="<?php echo $data1['avatar']; ?>" style="width: 100%;height: 100%;"></div>
-					      <div class="back">
-					        <div class="details">
-					          <h2><?php echo $data1['fullname']; ?><br><span>Đẹp zai tốt bụng</span></h2>
-					          <div class="social-icons">
-					            <a href="#"><i class="fab fa-facebook-f"></i></a>
-					            <a href="#"><i class="fab fa-twitter"></i></a>
-					            <a href="#"><i class="fab fa-google-plus-g"></i></a>
-					            <a href="#"><i class="fab fa-instagram"></i></a>
-					            <a href="#"><i class="fab fa-linkedin-in"></i></a>
-					          </div>
-					        </div>
-					    </div>
-					    <a  href="#" style="width: 100%; position: absolute;z-index: 1000; height: 50px; bottom: 0px; background-color: #00000091">
-						    <label for="ttkh_change_img" class="ttkh_change_img" >					    	
-						    	<i  style="font-size: 30px;margin-left: 135px;color: #fff;margin-top: 12px;" class="fas fa-camera"></i>					    
-						    	<input id="ttkh_change_img" type="file" name="" style="display: none;">
-						    </label>
-					    </a>
-					</div>  
+					<form method="post" enctype="multipart/form-data">
+						<div class="tpk_card">
+						  	<div class="front"><img id="image_cus" src="<?php echo $data1['avatar']; ?>" style="width: 100%;height: 100%;"></div>
+						      <div class="back">
+						        <div class="details">
+						          <h2><?php echo $data1['fullname']; ?><br><span>Đẹp zai tốt bụng</span></h2>
+						          <div class="social-icons">
+						            <a href="#"><i class="fab fa-facebook-f"></i></a>
+						            <a href="#"><i class="fab fa-twitter"></i></a>
+						            <a href="#"><i class="fab fa-google-plus-g"></i></a>
+						            <a href="#"><i class="fab fa-instagram"></i></a>
+						            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+						          </div>
+						        </div>
+						    </div>
+						    <a  href="#" style="width: 100%; position: absolute;z-index: 1000; height: 50px; bottom: 0px; background-color: #00000091">
+							    <label for="ttkh_change_img" class="ttkh_change_img" >					    	
+							    	<i  style="font-size: 30px;margin-left: 135px;color: #fff;margin-top: 12px;" class="fas fa-camera"></i>					    
+							    	<input onchange="hienanh(<?php echo $id; ?>)" id="ttkh_change_img" type="file" name="ttkh_change_img" style="display: none;">
+							    </label>
+						    </a>
+						</div> 
+						<div class="form-group" style="position: absolute;bottom: -50px;width: 300px;margin-left: 5px;">
+							<button type="submit" name="change_img_cus" class="form-control">Lưu</button>
+						</div>
+					</form> 
 				</div>
 			</div>
 			<div class="col-7" style="">

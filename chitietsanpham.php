@@ -1,6 +1,7 @@
 <?php
 	include("lib_db.php"); 
     session_start();
+    $datavote['vote'] = "0";
     $id = isset($_SESSION['idkh']) ? $_SESSION['idkh'] : '';
     if(isset($_POST["logout"]))
     {
@@ -9,21 +10,34 @@
         setcookie("password", "", time()-3600);
         header("location:Home.php");
     }
+    $idsp = isset($_REQUEST['idsp'])?$_REQUEST['idsp']:'';
     if($id !="")
     {
        $sql1 = "select * from customer_information where id = '$id'";
        $data1 = select_one($sql1);
        $sql2 = "SELECT COUNT(bill.idsp) as sl FROM bill WHERE bill.idkh = $id AND bill.status = 'TrongGio';";
        $datasl = select_one($sql2);
-
+       $sqlvote = "select * from evaluate where idp = $idsp and idc = $id";
+       $datadata = select_one($sqlvote);
+       if(isset($datadata))
+       {
+       		$datavote = select_one($sqlvote);
+       }
+       else {
+       		$datavote['vote'] = "0";
+       }
+       $commentcheck = "select * from bill where idkh = $id and idsp = $idsp and status = 'DaGiao'";
+       $data_commentcheck = select_one($commentcheck);
     }
-    $idsp = isset($_REQUEST['idsp'])?$_REQUEST['idsp']:'';
+    
     $sql = "select * from product where id = '$idsp'";
     $data = select_one($sql);
     $lienquan = $data['category'];
     $sql2 = "select * from product where category = '$lienquan' limit 4;";
     $data2= select_list($sql2);
-    
+    $sqlevaluate = "select * from evaluate where idp = $idsp";
+    $evaluate = select_list($sqlevaluate);
+   	
 ?>
 
 
@@ -63,50 +77,90 @@
 				document.getElementById("ctsp_icon").className = "fas fa-plus";
 			}
 		}
-		function sao1()
+		function sao1(idkh,idsp)
 		{
-			document.getElementById("sao1").style.color = "#ffc312";
-			document.getElementById("sao2").style.color = "#777777";
-			document.getElementById("sao3").style.color = "#777777";
-			document.getElementById("sao4").style.color = "#777777";
-			document.getElementById("sao5").style.color = "#777777";
-			document.getElementById("thangdiem").innerHTML  = "1/5";
+			if(idkh != "chualogin")
+			{
+				document.getElementById("sao1").style.color = "#ffc312";
+				document.getElementById("sao2").style.color = "#777777";
+				document.getElementById("sao3").style.color = "#777777";
+				document.getElementById("sao4").style.color = "#777777";
+				document.getElementById("sao5").style.color = "#777777";
+				document.getElementById("thangdiem").innerHTML  = "1/5";
+				$.post('backend/voteproduct.php',{'idkh':idkh,'idsp':idsp,'sao':1});
+			}
+			else
+			{
+				alert("Mời bạn đăng nhập để đánh giá sản phẩm");
+			}
 		}
-		function sao2()
+		function sao2(idkh,idsp)
 		{
-			document.getElementById("sao1").style.color = "#ffc312";
-			document.getElementById("sao2").style.color = "#ffc312";
-			document.getElementById("sao3").style.color = "#777777";
-			document.getElementById("sao4").style.color = "#777777";
-			document.getElementById("sao5").style.color = "#777777";
-			document.getElementById("thangdiem").innerHTML  = "2/5";
+			if(idkh != "chualogin")
+			{
+				document.getElementById("sao1").style.color = "#ffc312";
+				document.getElementById("sao2").style.color = "#ffc312";
+				document.getElementById("sao3").style.color = "#777777";
+				document.getElementById("sao4").style.color = "#777777";
+				document.getElementById("sao5").style.color = "#777777";
+				document.getElementById("thangdiem").innerHTML  = "2/5";
+				$.post('backend/voteproduct.php',{'idkh':idkh,'idsp':idsp,'sao':2});
+			}
+			else
+			{
+				alert("Mời bạn đăng nhập để đánh giá sản phẩm");
+			}
 		}
-		function sao3()
+		function sao3(idkh,idsp)
 		{
-			document.getElementById("sao1").style.color = "#ffc312";
-			document.getElementById("sao2").style.color = "#ffc312";
-			document.getElementById("sao3").style.color = "#ffc312";
-			document.getElementById("sao4").style.color = "#777777";
-			document.getElementById("sao5").style.color = "#777777";
-			document.getElementById("thangdiem").innerHTML  = "3/5";
+			if(idkh != "chualogin")
+			{
+				document.getElementById("sao1").style.color = "#ffc312";
+				document.getElementById("sao2").style.color = "#ffc312";
+				document.getElementById("sao3").style.color = "#ffc312";
+				document.getElementById("sao4").style.color = "#777777";
+				document.getElementById("sao5").style.color = "#777777";
+				document.getElementById("thangdiem").innerHTML  = "3/5";
+				$.post('backend/voteproduct.php',{'idkh':idkh,'idsp':idsp,'sao':3});
+			}
+			else
+			{
+				alert("Mời bạn đăng nhập để đánh giá sản phẩm");
+			}
 		}
-		function sao4()
+		function sao4(idkh,idsp)
 		{
-			document.getElementById("sao1").style.color = "#ffc312";
-			document.getElementById("sao2").style.color = "#ffc312";
-			document.getElementById("sao3").style.color = "#ffc312";
-			document.getElementById("sao4").style.color = "#ffc312";
-			document.getElementById("sao5").style.color = "#777777";
-			document.getElementById("thangdiem").innerHTML  = "4/5";
+			if(idkh != "chualogin")
+			{
+				document.getElementById("sao1").style.color = "#ffc312";
+				document.getElementById("sao2").style.color = "#ffc312";
+				document.getElementById("sao3").style.color = "#ffc312";
+				document.getElementById("sao4").style.color = "#ffc312";
+				document.getElementById("sao5").style.color = "#777777";
+				document.getElementById("thangdiem").innerHTML  = "4/5";
+				$.post('backend/voteproduct.php',{'idkh':idkh,'idsp':idsp,'sao':4});
+			}
+			else
+			{
+				alert("Mời bạn đăng nhập để đánh giá sản phẩm");
+			}
 		}
-		function sao5()
+		function sao5(idkh,idsp)
 		{
-			document.getElementById("sao1").style.color = "#ffc312";
-			document.getElementById("sao2").style.color = "#ffc312";
-			document.getElementById("sao3").style.color = "#ffc312";
-			document.getElementById("sao4").style.color = "#ffc312";
-			document.getElementById("sao5").style.color = "#ffc312";
-			document.getElementById("thangdiem").innerHTML  = "5/5";
+			if(idkh != "chualogin")
+			{
+				document.getElementById("sao1").style.color = "#ffc312";
+				document.getElementById("sao2").style.color = "#ffc312";
+				document.getElementById("sao3").style.color = "#ffc312";
+				document.getElementById("sao4").style.color = "#ffc312";
+				document.getElementById("sao5").style.color = "#ffc312";
+				document.getElementById("thangdiem").innerHTML  = "5/5";
+				$.post('backend/voteproduct.php',{'idkh':idkh,'idsp':idsp,'sao':5});
+			}
+			else
+			{
+				alert("Mời bạn đăng nhập để đánh giá sản phẩm");
+			}
 		}
 		function tongtien()
 		{
@@ -141,7 +195,34 @@
 		{
 			alert("Bạn chưa đăng nhập");
 		}
+		function comment(idkh,idsp)
+		{
+
+		    var content = document.getElementById("contencomment").value;
+		    $.post('backend/comment.php',{'idkh':idkh,'idsp':idsp,'content':content},
+		    function(data)
+		    {
+		        document.getElementById("boxcomment").innerHTML = data;
+		        document.getElementById("contencomment").value = "";
+		    })
+		}
+		
+		function autoload()
+		{
+		    var idkh = document.getElementById("idkh").innerHTML;
+		    var idsp = document.getElementById("idsp").innerHTML;
+		    var content = "";
+		    console.log(idkh+"haha");
+		    $.post('backend/comment.php',{'idkh':idkh,'idsp':idsp,'content':content},
+		    function(data)
+		    {
+		        document.getElementById("boxcomment").innerHTML = data;
+		    });
+		}
+		setInterval(autoload, 1000);
 	</script>
+	<p id="idkh" style="display: none;"><?php echo $id; ?></p>
+    <p id="idsp" style="display: none;"><?php echo $idsp; ?></p>
 	<?php require_once('header.php') ?>
 	<div class="container-fluid" style="height: 100px;"></div>	
 	<div class="container-fluid" style="margin-top: 50px; margin-bottom: 50px;">
@@ -225,33 +306,59 @@
 		<div class="row" style="width: 100%;">
 			<div class="col-7">
 				<div class="ctsp_comment" style="width: 90%; height: 500px;padding-top: 50px;">
-					<div class="ctsp_comment_top" style="overflow: auto;height: 300px;width: 100%;">
-						<div class="ctsp_comment_left">
-							<div class="ctsp_comment_img" style="width: 40px;height: 40px;float: left;">
-								<img src="" alt="" style="width: 100%;height: 100%">
+					<div class="ctsp_comment_top" style="overflow: auto;height: 300px;width: 100%;" id="boxcomment">
+						<?php
+						if(isset($evaluate))
+						{
+						foreach ($evaluate as $key) 
+						{
+							if($key['idc'] != $id)
+							{
+							?>
+							<div class="ctsp_comment_left">
+								<div class="ctsp_comment_img" style="width: 40px;height: 40px;float: left;">
+									<img src="<?php echo ""; ?>" alt="" style="width: 100%;height: 100%">
+								</div>
+								<div class="ctsp_comment_conten" style="margin-left: 40px;width: 500px;
+								clip-path: polygon(2% 0, 100% 0%, 100% 100%, 2% 100%, 0% 50%);" >
+									<p style="margin-left: 10px; font-size: 13px;padding-left: 10px;padding-bottom: 0px;word-wrap: break-word;color: #777777;margin-bottom: 0px;"><?php echo $key['conten'] ?></p>
+									<span style="margin-left: 10px; font-size: 11px;padding: 10px;"><?php $time = strtotime($key['time']); $time2 = date('H:i',$time); echo $time2;?></span>
+								</div>
 							</div>
-							<div class="ctsp_comment_conten" style="margin-left: 40px;width: 500px;
-							clip-path: polygon(2% 0, 100% 0%, 100% 100%, 2% 100%, 0% 50%);" >
-								<p style="margin-left: 10px; font-size: 13px;padding-left: 10px;padding-bottom: 0px;word-wrap: break-word;color: #777777;margin-bottom: 0px;">Phím đàn với độ nhạy và độ chính xác cao giúp cải thiện kĩ năng của trẻ.
-									Được trang bị ba bàn đạp để chơi những giai điệu cổ điển một cách chuẩn xác.</p>
-								<span style="margin-left: 10px; font-size: 11px;padding: 10px;">10:35</span>
-							</div>
-						</div>
-						<div class="ctsp_comment_right">
-							<div class="ctsp_comment_img" style="width: 40px;height: 40px;float: right;">
-								<img src="" alt="" style="width: 100%;height: 100%">
-							</div>
-							<div class="ctsp_comment_conten" style="width: 500px;float: right;">
-								<p style=" text-align: right; font-size: 13px;padding-bottom: 0px;word-wrap: break-word;color: #777777;margin-bottom: 5px; width: 100%;padding-right:10px; ">Phím đàn với độ nhạy và độ chính xác cao giúp cải thiện kĩ năng của trẻ.
-									Được trang bị ba bàn đạp để chơi những giai điệu cổ điển một cách chuẩn xác.</p>
-								<p style="text-align: right; font-size: 11px;color: #777777;padding-top: 5px">10:35</p>
-							</div>
-						</div>
+							<?php
+							}
+							else
+							{
+								?>
+								<div class="ctsp_comment_right">
+									<div class="ctsp_comment_img" style="width: 40px;height: 40px;float: right;">
+										<img src="<?php echo ""; ?>" alt="" style="width: 100%;height: 100%">
+									</div>
+									<div class="ctsp_comment_conten" style="width: 500px;float: right;">
+										<p style=" text-align: right; font-size: 13px;padding-bottom: 0px;word-wrap: break-word;color: #777777;margin-bottom: 5px; width: 100%;padding-right:10px; "><?php echo $key['conten'] ?></p>
+										<p style="text-align: right; font-size: 11px;color: #777777;padding-top: 5px;margin-right: 10px;"><?php $time = strtotime($key['time']); $time2 = date('H:i',$time); echo $time2;?></p>
+									</div>
+								</div>
+								<?php
+							}
+						}
+						}
+						?>
+						
+						
 					</div>
-					<div class="ctsp_comment_bottom">
-						<textarea class="form-control" style="width: 100%;padding: 10px;max-height: 140px;min-height: 50px;" placeholder="Viết bình luận của bạn..." ></textarea>
-							<button type="button" style="font-size: 13px;padding: 5px; padding-left: 50px;padding-right: 50px;text-align: center;background-color: #231f20;color: #fff;border-radius: 4px;margin-top: 20px;margin-bottom: 20px;margin-left:0px;animation: nhaylennhaylen .5s ease-out;">Gửi bình luận</button>
-					</div>
+					<?php
+					if(isset($data_commentcheck))
+					{
+						?>
+						<div class="ctsp_comment_bottom">
+							<textarea id="contencomment" class="form-control" style="width: 100%;padding: 10px;max-height: 140px;min-height: 50px;" placeholder="Viết bình luận của bạn..." ></textarea>
+								<button onclick="comment(<?php echo $id; ?>,<?php echo $idsp; ?>)" type="button" style="font-size: 13px;padding: 5px; padding-left: 50px;padding-right: 50px;text-align: center;background-color: #231f20;color: #fff;border-radius: 4px;margin-top: 20px;margin-bottom: 20px;margin-left:0px;animation: nhaylennhaylen .5s ease-out;">Gửi bình luận</button>
+						</div>
+						<?php
+					}
+					?>
+					
 				</div>				
 			</div>
 			<div class="col-5">
@@ -316,12 +423,12 @@
 					</ul>
 				</div>
 				<div>
-					<h1 id="thangdiem" style="font-size: 50px;color: #cb1c22;margin-left: 50px;">1/5</h1>
-					<i onclick="sao1()" id="sao1" style="font-size: 30px;color: #ffc312" class="fas fa-star"></i>
-					<i onclick="sao2()" id="sao2" style="font-size: 30px;" class="fas fa-star"></i>
-					<i onclick="sao3()" id="sao3" style="font-size: 30px;" class="fas fa-star"></i>
-					<i onclick="sao4()" id="sao4" style="font-size: 30px;" class="fas fa-star"></i>
-					<i onclick="sao5()" id="sao5" style="font-size: 30px;" class="fas fa-star"></i>
+					<h1 id="thangdiem" style="font-size: 50px;color: #cb1c22;margin-left: 50px;"><?php echo $datavote['vote']; ?>/5</h1>
+					<i onclick="sao1(<?php if($id !=""){ echo $id;}else{echo "'chualogin'";} ?>,<?php echo $idsp; ?>)" id="sao1" style="font-size: 30px;<?php if($datavote['vote'] >=1){ echo "color: #ffc312"; } ?>" class="fas fa-star"></i>
+					<i onclick="sao2(<?php if($id !=""){ echo $id;}else{echo "'chualogin'";} ?>,<?php echo $idsp; ?>)" id="sao2" style="font-size: 30px;<?php if($datavote['vote'] >=2){ echo "color: #ffc312"; } ?>" class="fas fa-star"></i>
+					<i onclick="sao3(<?php if($id !=""){ echo $id;}else{echo "'chualogin'";} ?>,<?php echo $idsp; ?>)" id="sao3" style="font-size: 30px;<?php if($datavote['vote'] >=3){ echo "color: #ffc312"; } ?>" class="fas fa-star"></i>
+					<i onclick="sao4(<?php if($id !=""){ echo $id;}else{echo "'chualogin'";} ?>,<?php echo $idsp; ?>)" id="sao4" style="font-size: 30px;<?php if($datavote['vote'] >=4){ echo "color: #ffc312"; } ?>" class="fas fa-star"></i>
+					<i onclick="sao5(<?php if($id !=""){ echo $id;}else{echo "'chualogin'";} ?>,<?php echo $idsp; ?>)" id="sao5" style="font-size: 30px;<?php if($datavote['vote'] >=5){ echo "color: #ffc312"; } ?>" class="fas fa-star"></i>
 				</div>
 			</div>
 		</div>

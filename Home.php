@@ -1,6 +1,11 @@
 <?php
 	include("lib_db.php"); 
     session_start();
+    $idnv = isset($_SESSION['idnv']) ? $_SESSION['idnv'] : '';
+    if($idnv != "")
+    {
+    	 header("location:admin.php");
+    }
     $id = isset($_SESSION['idkh']) ? $_SESSION['idkh'] : '';
     if(isset($_POST["logout"]))
     {
@@ -22,26 +27,46 @@
         {
             $tk = $_COOKIE['usname'];
             $mk = $_COOKIE['pass'];
-            $sql = "";
+            $sql = "select * from customer_information where username = '$tk' and password = '$mk'";
             $data = select_one($sql);
-
-            if ($data !=0)
+            if (isset($data))
             {
-                $id = $data['id'];
-                if ($id == 1)
-                {
-                     $_SESSION['idkh']=$id;
-                }
-                else
-                {           
-                    
-                    $_SESSION['idkh']=$id;                        
-                }
+                $id = $data['id'];            
+                $_SESSION['idkh']=$id;
+            }
+            else
+            {
+            	$sqlcheckad = "select * from staff where username_sa = '$tk' and password_sa = '$mk'";
+            	$datacheckad = select_one($sqlcheckad);
+            	if (isset($datacheckad)) 
+            	{
+            		$id = $data['id'];            
+                	$_SESSION['idnv']=$id;
+                	header('location:admin.php');
+
+            	}
             }
         }    
     }
-
-
+    $dulieupiano1 = "select * from product where category = 'Piano' limit 4";
+    $dulieupiano2 = "select * from product where category = 'Piano' limit 4 offset 4";
+    $dulieupiano3 = "select * from product where category = 'Piano' limit 4 offset 8";
+    $datapiano1 = select_list($dulieupiano1);
+    $datapiano2 = select_list($dulieupiano2);
+    $datapiano3 = select_list($dulieupiano3);
+    $dulieuguitar1 = "select * from product where category = 'Guitar' limit 4";
+	$dulieuguitar2 = "select * from product where category = 'Guitar' limit 4 offset 4";
+	$dulieuguitar3 = "select * from product where category = 'Guitar' limit 4 offset 8";
+	$dataguitar1 = select_list($dulieuguitar1);
+	$dataguitar2 = select_list($dulieuguitar2);
+	$dataguitar3 = select_list($dulieuguitar3);
+	$dulieutrong1 = "select * from product where category = 'Trong' limit 4";
+	$dulieutrong2 = "select * from product where category = 'Trong' limit 4 offset 4";
+	$dulieutrong3 = "select * from product where category = 'Trong' limit 4 offset 8";
+	$datatrong1 = select_list($dulieutrong1);
+	$datatrong2 = select_list($dulieutrong2);
+	$datatrong3 = select_list($dulieutrong3);
+	
 ?>
 
 
@@ -610,8 +635,12 @@
 	        <div class="carousel-inner">
 	            <div class="carousel-item active">
 	                <div class="row"style="animation: moveBottom 1s ease-out;">
+			   			<?php
+			   			foreach ($datapiano1 as $key) 
+			   			{
+			   			?>
 			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
+			   				<a href="chitietsanpham.php?idsp=<?php echo $key['id']; ?>" style="width: 100%;" >
 			   					<div class="giamgia-box" >
 			   						<div class="timegiamgia" >
 			   							<span >1d:2h:06p:32s</span>
@@ -620,122 +649,39 @@
 				   						<span style="font-size: 13px;">-20%</span>
 				   					</div>
 			   					</div>
-				   				<div class="itemsp" >
+				   				<div class="itemsp" style="width: 100%">
 				   					<div class="xemthem" >
 				   						<span >Xem Thêm</span>
 				   					</div>
 				   					<div class="anhsp" >
-				   						<img src="img/dan1.jpg"	 alt="img/dan1.jpg" style="width: 100% ;height:100%">
+				   						<img src="<?php echo $key['avatar']; ?>"	 alt="<?php echo $key['avatar'] ?>" style="width: 100% ;height:100%">
 				   					</div>
 
 				   					<div class="in4sp">
 				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
+					   						<span style=""><?php echo $key['name']; ?></span>
 					   					</div>
 					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
+					   						<span class="giathat" ><?php echo number_format($key['price']); ?></span>
 					   						<span class="giagiam" >190.000₫</span>
 					   					</div>
 				   					</div>
 				   				</div>
 			   				</a>
 			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/dan10.jpg" alt="img/dan10.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/saxophone7.jpg"	 alt="img/saxophone7.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/trong4.jpg"	 alt="img/trong4.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>   		
+			   			<?php
+			   			}
+			   			?>  
 			   		</div>
 	            </div>           
 	            <div class="carousel-item">
 	                <div class="row"style="animation: moveBottom 1s ease-out;">
+			   			<?php
+			   			foreach ($datapiano2 as $key) 
+			   			{
+			   			?>
 			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
+			   				<a href="chitietsanpham.php?idsp=<?php echo $key['id']; ?>" style="width: 100%;" >
 			   					<div class="giamgia-box" >
 			   						<div class="timegiamgia" >
 			   							<span >1d:2h:06p:32s</span>
@@ -744,122 +690,39 @@
 				   						<span style="font-size: 13px;">-20%</span>
 				   					</div>
 			   					</div>
-				   				<div class="itemsp" >
+				   				<div class="itemsp" style="width: 100%">
 				   					<div class="xemthem" >
 				   						<span >Xem Thêm</span>
 				   					</div>
 				   					<div class="anhsp" >
-				   						<img src="img/dan1.jpg"	 alt="img/dan1.jpg" style="width: 100% ;height:100%">
+				   						<img src="<?php echo $key['avatar']; ?>"	 alt="<?php echo $key['avatar'] ?>" style="width: 100% ;height:100%">
 				   					</div>
 
 				   					<div class="in4sp">
 				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
+					   						<span style=""><?php echo $key['name']; ?></span>
 					   					</div>
 					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
+					   						<span class="giathat" ><?php echo number_format($key['price']); ?></span>
 					   						<span class="giagiam" >190.000₫</span>
 					   					</div>
 				   					</div>
 				   				</div>
 			   				</a>
 			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/dan10.jpg" alt="img/dan10.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/saxophone7.jpg"	 alt="img/saxophone7.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/trong4.jpg"	 alt="img/trong4.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>   		
+			   			<?php
+			   			}
+			   			?>  	
 			   		</div>
 	            </div>
 	            <div class="carousel-item">
 	                <div class="row"style="animation: moveBottom 1s ease-out;">
+			   			<?php
+			   			foreach ($datapiano3 as $key) 
+			   			{
+			   			?>
 			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
+			   				<a href="chitietsanpham.php?idsp=<?php echo $key['id']; ?>" style="width: 100%;" >
 			   					<div class="giamgia-box" >
 			   						<div class="timegiamgia" >
 			   							<span >1d:2h:06p:32s</span>
@@ -868,116 +731,29 @@
 				   						<span style="font-size: 13px;">-20%</span>
 				   					</div>
 			   					</div>
-				   				<div class="itemsp" >
+				   				<div class="itemsp" style="width: 100%">
 				   					<div class="xemthem" >
 				   						<span >Xem Thêm</span>
 				   					</div>
 				   					<div class="anhsp" >
-				   						<img src="img/dan1.jpg"	 alt="img/dan1.jpg" style="width: 100% ;height:100%">
+				   						<img src="<?php echo $key['avatar']; ?>"	 alt="<?php echo $key['avatar'] ?>" style="width: 100% ;height:100%">
 				   					</div>
 
 				   					<div class="in4sp">
 				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
+					   						<span style=""><?php echo $key['name']; ?></span>
 					   					</div>
 					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
+					   						<span class="giathat" ><?php echo number_format($key['price']); ?></span>
 					   						<span class="giagiam" >190.000₫</span>
 					   					</div>
 				   					</div>
 				   				</div>
 			   				</a>
 			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/dan10.jpg" alt="img/dan10.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/saxophone7.jpg"	 alt="img/saxophone7.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/trong4.jpg"	 alt="img/trong4.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>   		
+			   			<?php
+			   			}
+			   			?>  			
 			   		</div>
 	            </div>
 	        </div>
@@ -991,7 +767,7 @@
    		
    		<div class="row" style="margin-top: 20px;animation: moveBottom 1s ease-out;margin-bottom: 10px;">
    			<div class="col-12">
-   				<a class="btn btn-white" href="sanpham.php">Xem Thêm</a>
+   				<a class="btn btn-white" href="sanpham.php?theloai=Piano">Xem Thêm</a>
    			</div>
    		</div>
    	</div>
@@ -1009,8 +785,12 @@
 	        <div class="carousel-inner">
 	            <div class="carousel-item active">
 	                <div class="row"style="animation: moveBottom 1s ease-out;">
+			   			<?php
+			   			foreach ($dataguitar1 as $key) 
+			   			{
+			   			?>
 			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
+			   				<a href="chitietsanpham.php?idsp=<?php echo $key['id']; ?>" style="width: 100%;" >
 			   					<div class="giamgia-box" >
 			   						<div class="timegiamgia" >
 			   							<span >1d:2h:06p:32s</span>
@@ -1019,122 +799,39 @@
 				   						<span style="font-size: 13px;">-20%</span>
 				   					</div>
 			   					</div>
-				   				<div class="itemsp" >
+				   				<div class="itemsp" style="width: 100%">
 				   					<div class="xemthem" >
 				   						<span >Xem Thêm</span>
 				   					</div>
 				   					<div class="anhsp" >
-				   						<img src="img/dan1.jpg"	 alt="img/dan1.jpg" style="width: 100% ;height:100%">
+				   						<img src="<?php echo $key['avatar']; ?>"	 alt="<?php echo $key['avatar'] ?>" style="width: 100% ;height:100%">
 				   					</div>
 
 				   					<div class="in4sp">
 				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
+					   						<span style=""><?php echo $key['name']; ?></span>
 					   					</div>
 					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
+					   						<span class="giathat" ><?php echo number_format($key['price']); ?></span>
 					   						<span class="giagiam" >190.000₫</span>
 					   					</div>
 				   					</div>
 				   				</div>
 			   				</a>
 			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/dan10.jpg" alt="img/dan10.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/saxophone7.jpg"	 alt="img/saxophone7.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/trong4.jpg"	 alt="img/trong4.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>   		
+			   			<?php
+			   			}
+			   			?>  		
 			   		</div>
 	            </div>           
 	            <div class="carousel-item">
 	                <div class="row"style="animation: moveBottom 1s ease-out;">
+			   			<?php
+			   			foreach ($dataguitar2 as $key) 
+			   			{
+			   			?>
 			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
+			   				<a href="chitietsanpham.php?idsp=<?php echo $key['id']; ?>" style="width: 100%;" >
 			   					<div class="giamgia-box" >
 			   						<div class="timegiamgia" >
 			   							<span >1d:2h:06p:32s</span>
@@ -1143,122 +840,39 @@
 				   						<span style="font-size: 13px;">-20%</span>
 				   					</div>
 			   					</div>
-				   				<div class="itemsp" >
+				   				<div class="itemsp" style="width: 100%">
 				   					<div class="xemthem" >
 				   						<span >Xem Thêm</span>
 				   					</div>
 				   					<div class="anhsp" >
-				   						<img src="img/dan1.jpg"	 alt="img/dan1.jpg" style="width: 100% ;height:100%">
+				   						<img src="<?php echo $key['avatar']; ?>"	 alt="<?php echo $key['avatar'] ?>" style="width: 100% ;height:100%">
 				   					</div>
 
 				   					<div class="in4sp">
 				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
+					   						<span style=""><?php echo $key['name']; ?></span>
 					   					</div>
 					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
+					   						<span class="giathat" ><?php echo number_format($key['price']); ?></span>
 					   						<span class="giagiam" >190.000₫</span>
 					   					</div>
 				   					</div>
 				   				</div>
 			   				</a>
 			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/dan10.jpg" alt="img/dan10.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/saxophone7.jpg"	 alt="img/saxophone7.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/trong4.jpg"	 alt="img/trong4.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>   		
+			   			<?php
+			   			}
+			   			?>  		
 			   		</div>
 	            </div>
 	            <div class="carousel-item">
 	                <div class="row"style="animation: moveBottom 1s ease-out;">
+			   			<?php
+			   			foreach ($dataguitar3 as $key) 
+			   			{
+			   			?>
 			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
+			   				<a href="chitietsanpham.php?idsp=<?php echo $key['id']; ?>" style="width: 100%;" >
 			   					<div class="giamgia-box" >
 			   						<div class="timegiamgia" >
 			   							<span >1d:2h:06p:32s</span>
@@ -1267,116 +881,29 @@
 				   						<span style="font-size: 13px;">-20%</span>
 				   					</div>
 			   					</div>
-				   				<div class="itemsp" >
+				   				<div class="itemsp" style="width: 100%">
 				   					<div class="xemthem" >
 				   						<span >Xem Thêm</span>
 				   					</div>
 				   					<div class="anhsp" >
-				   						<img src="img/dan1.jpg"	 alt="img/dan1.jpg" style="width: 100% ;height:100%">
+				   						<img src="<?php echo $key['avatar']; ?>"	 alt="<?php echo $key['avatar'] ?>" style="width: 100% ;height:100%">
 				   					</div>
 
 				   					<div class="in4sp">
 				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
+					   						<span style=""><?php echo $key['name']; ?></span>
 					   					</div>
 					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
+					   						<span class="giathat" ><?php echo number_format($key['price']); ?></span>
 					   						<span class="giagiam" >190.000₫</span>
 					   					</div>
 				   					</div>
 				   				</div>
 			   				</a>
 			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/dan10.jpg" alt="img/dan10.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/saxophone7.jpg"	 alt="img/saxophone7.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/trong4.jpg"	 alt="img/trong4.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>   		
+			   			<?php
+			   			}
+			   			?>  		
 			   		</div>
 	            </div>
 	        </div>
@@ -1390,7 +917,7 @@
    		
    		<div class="row" style="margin-top: 20px;animation: moveBottom 1s ease-out;margin-bottom: 10px;">
    			<div class="col-12">
-   				<a class="btn btn-white" href="sanpham.php">Xem Thêm</a>
+   				<a class="btn btn-white" href="sanpham.php?theloai=Guitar">Xem Thêm</a>
    			</div>
    		</div>
    	</div>
@@ -1408,8 +935,12 @@
 	        <div class="carousel-inner">
 	            <div class="carousel-item active">
 	                <div class="row"style="animation: moveBottom 1s ease-out;">
+			   			<?php
+			   			foreach ($datatrong1 as $key) 
+			   			{
+			   			?>
 			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
+			   				<a href="chitietsanpham.php?idsp=<?php echo $key['id']; ?>" style="width: 100%;" >
 			   					<div class="giamgia-box" >
 			   						<div class="timegiamgia" >
 			   							<span >1d:2h:06p:32s</span>
@@ -1418,122 +949,39 @@
 				   						<span style="font-size: 13px;">-20%</span>
 				   					</div>
 			   					</div>
-				   				<div class="itemsp" >
+				   				<div class="itemsp" style="width: 100%">
 				   					<div class="xemthem" >
 				   						<span >Xem Thêm</span>
 				   					</div>
 				   					<div class="anhsp" >
-				   						<img src="img/dan1.jpg"	 alt="img/dan1.jpg" style="width: 100% ;height:100%">
+				   						<img src="<?php echo $key['avatar']; ?>"	 alt="<?php echo $key['avatar'] ?>" style="width: 100% ;height:100%">
 				   					</div>
 
 				   					<div class="in4sp">
 				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
+					   						<span style=""><?php echo $key['name']; ?></span>
 					   					</div>
 					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
+					   						<span class="giathat" ><?php echo number_format($key['price']); ?></span>
 					   						<span class="giagiam" >190.000₫</span>
 					   					</div>
 				   					</div>
 				   				</div>
 			   				</a>
 			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/dan10.jpg" alt="img/dan10.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/saxophone7.jpg"	 alt="img/saxophone7.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/trong4.jpg"	 alt="img/trong4.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>   		
+			   			<?php
+			   			}
+			   			?>  		
 			   		</div>
 	            </div>           
 	            <div class="carousel-item">
 	                <div class="row"style="animation: moveBottom 1s ease-out;">
+			   			<?php
+			   			foreach ($datatrong2 as $key) 
+			   			{
+			   			?>
 			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
+			   				<a href="chitietsanpham.php?idsp=<?php echo $key['id']; ?>" style="width: 100%;" >
 			   					<div class="giamgia-box" >
 			   						<div class="timegiamgia" >
 			   							<span >1d:2h:06p:32s</span>
@@ -1542,122 +990,39 @@
 				   						<span style="font-size: 13px;">-20%</span>
 				   					</div>
 			   					</div>
-				   				<div class="itemsp" >
+				   				<div class="itemsp" style="width: 100%">
 				   					<div class="xemthem" >
 				   						<span >Xem Thêm</span>
 				   					</div>
 				   					<div class="anhsp" >
-				   						<img src="img/dan1.jpg"	 alt="img/dan1.jpg" style="width: 100% ;height:100%">
+				   						<img src="<?php echo $key['avatar']; ?>"	 alt="<?php echo $key['avatar'] ?>" style="width: 100% ;height:100%">
 				   					</div>
 
 				   					<div class="in4sp">
 				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
+					   						<span style=""><?php echo $key['name']; ?></span>
 					   					</div>
 					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
+					   						<span class="giathat" ><?php echo number_format($key['price']); ?></span>
 					   						<span class="giagiam" >190.000₫</span>
 					   					</div>
 				   					</div>
 				   				</div>
 			   				</a>
 			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/dan10.jpg" alt="img/dan10.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/saxophone7.jpg"	 alt="img/saxophone7.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/trong4.jpg"	 alt="img/trong4.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>   		
+			   			<?php
+			   			}
+			   			?>  
 			   		</div>
 	            </div>
 	            <div class="carousel-item">
 	                <div class="row"style="animation: moveBottom 1s ease-out;">
+			   			<?php
+			   			foreach ($datatrong3 as $key) 
+			   			{
+			   			?>
 			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
+			   				<a href="chitietsanpham.php?idsp=<?php echo $key['id']; ?>" style="width: 100%;" >
 			   					<div class="giamgia-box" >
 			   						<div class="timegiamgia" >
 			   							<span >1d:2h:06p:32s</span>
@@ -1666,116 +1031,29 @@
 				   						<span style="font-size: 13px;">-20%</span>
 				   					</div>
 			   					</div>
-				   				<div class="itemsp" >
+				   				<div class="itemsp" style="width: 100%">
 				   					<div class="xemthem" >
 				   						<span >Xem Thêm</span>
 				   					</div>
 				   					<div class="anhsp" >
-				   						<img src="img/dan1.jpg"	 alt="img/dan1.jpg" style="width: 100% ;height:100%">
+				   						<img src="<?php echo $key['avatar']; ?>"	 alt="<?php echo $key['avatar'] ?>" style="width: 100% ;height:100%">
 				   					</div>
 
 				   					<div class="in4sp">
 				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
+					   						<span style=""><?php echo $key['name']; ?></span>
 					   					</div>
 					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
+					   						<span class="giathat" ><?php echo number_format($key['price']); ?></span>
 					   						<span class="giagiam" >190.000₫</span>
 					   					</div>
 				   					</div>
 				   				</div>
 			   				</a>
 			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/dan10.jpg" alt="img/dan10.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/saxophone7.jpg"	 alt="img/saxophone7.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>
-			   			<div class="col-lg-3 col-sm-6 col-12" >
-			   				<a href=""  style="">
-			   					<div class="giamgia-box" >
-			   						<div class="timegiamgia" >
-			   							<span >1d:2h:06p:32s</span>
-			   						</div>
-			   						<div  class="giamgia">
-				   						<span style="font-size: 13px;">-20%</span>
-				   					</div>
-			   					</div>
-				   				<div class="itemsp" >
-				   					<div class="xemthem" >
-				   						<span >Xem Thêm</span>
-				   					</div>
-				   					<div class="anhsp" >
-				   						<img src="img/trong4.jpg"	 alt="img/trong4.jpg" style="width: 100% ;height:100%">
-				   					</div>
-
-				   					<div class="in4sp">
-				   						<div class="tensp">
-					   						<span style="">Kawai ND-21</span>
-					   					</div>
-					   					<div class="price">
-					   						<span class="giathat" >190.000₫</span>
-					   						<span class="giagiam" >190.000₫</span>
-					   					</div>
-				   					</div>
-				   				</div>
-			   				</a>
-			   			</div>   		
+			   			<?php
+			   			}
+			   			?>  		
 			   		</div>
 	            </div>
 	        </div>
@@ -1789,7 +1067,7 @@
    		
    		<div class="row" style="margin-top: 20px;animation: moveBottom 1s ease-out;margin-bottom: 10px;">
    			<div class="col-12">
-   				<a class="btn btn-white" href="sanpham.php">Xem Thêm</a>
+   				<a class="btn btn-white" href="sanpham.php?theloai=Trong">Xem Thêm</a>
    			</div>
    		</div>
    	</div>
